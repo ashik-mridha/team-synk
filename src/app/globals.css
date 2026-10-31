@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /*
+   * Design tokens live here and only here. Colors are space-separated RGB channels so Tailwind
+   * can apply alpha. Dark is the primary theme; light keeps the same structure.
+   */
+  :root,
+  .light {
+    --background: 250 250 251;
+    --sidebar: 244 244 246;
+    --surface: 255 255 255;
+    --surface-muted: 241 241 244;
+    --elevated: 255 255 255;
+    --border: 0 0 0;
+    --border-alpha: 0.08;
+    --border-strong-alpha: 0.15;
+    --foreground: 28 28 32;
+    --muted: 98 99 108;
+    --subtle: 104 105 114;
+
+    --primary: 94 106 210;
+    --primary-hover: 79 90 196;
+    --primary-soft: 238 239 252;
+    --primary-solid: 94 106 210;
+    --primary-solid-hover: 79 90 196;
+    --primary-text: 74 84 186;
+    --accent: 130 140 240;
+
+    --success: 46 160 106;
+    --success-soft: 223 245 233;
+    --success-text: 22 101 62;
+    --warning: 217 158 20;
+    --warning-soft: 253 243 207;
+    --warning-text: 133 77 14;
+    --danger: 214 69 69;
+    --danger-solid: 199 62 62;
+    --danger-soft: 253 228 228;
+    --danger-text: 170 38 38;
+    --info: 56 140 220;
+    --info-soft: 224 239 253;
+    --info-text: 24 84 150;
+
+    --column-todo: 120 121 130;
+    --column-progress: 217 158 20;
+    --column-done: 46 160 106;
+
+    --shadow: 20 20 30;
+    --shadow-soft: 0.05;
+    --shadow-raised: 0.08;
+    --shadow-overlay: 0.16;
+    color-scheme: light;
+  }
+
+  .dark {
+    --background: 22 23 26;
+    --sidebar: 27 28 32;
+    --surface: 31 32 36;
+    --surface-muted: 37 38 43;
+    --elevated: 32 33 39;
+    --border: 255 255 255;
+    --border-alpha: 0.07;
+    --border-strong-alpha: 0.12;
+    --foreground: 237 237 239;
+    --muted: 154 155 161;
+    --subtle: 142 143 151;
+
+    --primary: 94 106 210;
+    --primary-hover: 110 121 219;
+    --primary-soft: 39 41 62;
+    --primary-solid: 94 106 210;
+    --primary-solid-hover: 110 121 219;
+    --primary-text: 165 172 240;
+    --accent: 130 140 240;
+
+    --success: 76 183 130;
+    --success-soft: 28 48 40;
+    --success-text: 130 214 172;
+    --warning: 242 201 76;
+    --warning-soft: 52 46 26;
+    --warning-text: 242 214 120;
+    --danger: 235 87 87;
+    --danger-solid: 199 62 62;
+    --danger-soft: 58 32 34;
+    --danger-text: 246 150 150;
+    --info: 90 170 240;
+    --info-soft: 28 40 56;
+    --info-text: 140 195 245;
+
+    --column-todo: 160 161 168;
+    --column-progress: 242 201 76;
+    --column-done: 76 183 130;
+
+    --shadow: 0 0 0;
+    --shadow-soft: 0;
+    --shadow-raised: 0.25;
+    --shadow-overlay: 0.45;
+    color-scheme: dark;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply min-h-dvh overflow-x-clip bg-background font-sans text-sm text-foreground antialiased;
+    font-feature-settings: 'cv11', 'ss01';
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-semibold tracking-tight;
+  }
+
+  /* Hide the browser's built-in reveal icon; PasswordInput provides its own toggle. */
+  input::-ms-reveal,
+  input::-ms-clear {
+    display: none;
+  }
+
+  ::selection {
+    @apply bg-primary/30;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--border) / 0.2) transparent;
+  }
+}
