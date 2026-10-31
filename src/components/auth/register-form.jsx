@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
 import { PasswordStrengthMeter } from '@/components/auth/password-strength-meter';
+import { EmailSuggestion } from '@/components/auth/email-suggestion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormField } from '@/components/ui/form-field';
@@ -20,9 +21,11 @@ export function RegisterForm() {
     register,
     handleSubmit,
     setError,
+    setValue,
     control,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(registerSchema) });
+  const email = useWatch({ control, name: 'email' }) ?? '';
   const password = useWatch({ control, name: 'password' }) ?? '';
 
   // On success useSession() updates and GuestGuard performs the redirect.
@@ -34,8 +37,8 @@ export function RegisterForm() {
         setError('email', { message: 'An account with this email already exists' });
       }
       toast.error(getAuthErrorMessage(error));
-    } catch {
-      toast.error('Cannot reach the server. Check your connection and try again.');
+    } catch (error) {
+      toast.error(getAuthErrorMessage(error));
     }
   }
 
@@ -59,6 +62,10 @@ export function RegisterForm() {
               {...register('email')}
             />
           </FormField>
+          <EmailSuggestion
+            value={email}
+            onAccept={(next) => setValue('email', next, { shouldValidate: true })}
+          />
           <div className="flex flex-col gap-2.5">
             <FormField
               label="Password"

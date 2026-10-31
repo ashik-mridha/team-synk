@@ -33,8 +33,8 @@ export function ProfileForm({ user }) {
       }
       reset({ name: values.name });
       toast.success('Profile updated');
-    } catch {
-      toast.error('Cannot reach the server. Check your connection and try again.');
+    } catch (error) {
+      toast.error(getAuthErrorMessage(error));
     }
   }
 

@@ -1,18 +1,18 @@
 import axios from 'axios';
 import { toast } from 'sonner';
+import { API_URL } from '@/lib/config';
+import { describeFailure, logFailure } from '@/lib/errors';
 
 /** Client for the app's own REST API. Authentication is the Better Auth session cookie. */
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: API_URL,
   withCredentials: true,
-  timeout: 15_000,
+  // Free hosts can take ~30-60 s to wake from idle; keep the wait bounded but realistic.
+  timeout: 30_000,
 });
 
 export function getApiErrorMessage(error) {
-  const body = error?.response?.data;
-  if (body?.error?.message) return body.error.message;
-  if (error?.code === 'ERR_NETWORK') return 'Cannot reach the server. Check your connection.';
-  return error?.message || 'Something went wrong. Please try again.';
+  return describeFailure(error).message;
 }
 
 /**
@@ -24,9 +24,9 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     const { config, response } = error;
-    console.error(
-      `[api] ${config?.method?.toUpperCase()} ${config?.url} -> ${response?.status ?? 'no response'}`,
-      response?.data ?? error.message,
+    logFailure(
+      `api ${config?.method?.toUpperCase()} ${config?.url} -> ${response?.status ?? 'no response'}`,
+      error,
     );
 
     if (response?.status === 401 && typeof window !== 'undefined') {

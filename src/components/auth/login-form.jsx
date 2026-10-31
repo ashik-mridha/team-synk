@@ -3,8 +3,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { toast } from 'sonner';
+import { EmailSuggestion } from '@/components/auth/email-suggestion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { FormField } from '@/components/ui/form-field';
@@ -18,16 +19,20 @@ export function LoginForm() {
   const {
     register,
     handleSubmit,
+    control,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm({ resolver: zodResolver(loginSchema) });
+
+  const email = useWatch({ control, name: 'email' }) ?? '';
 
   // On success useSession() updates and GuestGuard performs the redirect.
   async function onSubmit(values) {
     try {
       const { error } = await authClient.signIn.email(values);
       if (error) toast.error(getAuthErrorMessage(error));
-    } catch {
-      toast.error('Cannot reach the server. Check your connection and try again.');
+    } catch (error) {
+      toast.error(getAuthErrorMessage(error));
     }
   }
 
@@ -49,6 +54,10 @@ export function LoginForm() {
               {...register('email')}
             />
           </FormField>
+          <EmailSuggestion
+            value={email}
+            onAccept={(next) => setValue('email', next, { shouldValidate: true })}
+          />
           <FormField label="Password" error={errors.password?.message}>
             <PasswordInput
               autoComplete="current-password"

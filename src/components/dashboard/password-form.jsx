@@ -38,8 +38,8 @@ export function PasswordForm() {
       }
       reset();
       toast.success('Password changed. Other devices have been signed out.');
-    } catch {
-      toast.error('Cannot reach the server. Check your connection and try again.');
+    } catch (error) {
+      toast.error(getAuthErrorMessage(error));
     }
   }
 
